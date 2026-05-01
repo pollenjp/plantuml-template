@@ -1,4 +1,4 @@
-# PlantUML 図
+# plantuml-template
 
 ## 生成
 
@@ -23,4 +23,3 @@ mise run plantuml:generate png      # PNG を出したい時
 
 `*.puml` を変更すると mise の sources/outputs 連動で再生成される。
 
-# plantuml-template
