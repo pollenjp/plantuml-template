@@ -3,7 +3,7 @@ java = "25"
 
 [env]
 PLANTUML_VERSION = "1.2026.2"
-PLANTUML_JAR = "~/.cache/plantuml/plantuml-{{ env.PLANTUML_VERSION }}.jar"
+PLANTUML_JAR = "{{ env.HOME }}/.cache/plantuml/plantuml-{{ env.PLANTUML_VERSION }}.jar"
 
 [tasks."plantuml:download"]
 description = "Download PlantUML JAR"
@@ -11,19 +11,18 @@ run = '''
 #!/usr/bin/env bash
 set -euo pipefail
 
-jar_path="${PLANTUML_JAR/#\~/$HOME}"
-jar_dir="$(dirname "$jar_path")"
+jar_dir="$(dirname "$PLANTUML_JAR")"
 
-if [[ -f "$jar_path" ]]; then
-  echo "plantuml.jar already exists at $jar_path"
+if [[ -f "$PLANTUML_JAR" ]]; then
+  echo "plantuml.jar already exists at $PLANTUML_JAR"
   exit 0
 fi
 
 mkdir -p "$jar_dir"
 echo "Downloading PlantUML v${PLANTUML_VERSION}..."
-curl -fSL -o "$jar_path" \
+curl -fSL -o "$PLANTUML_JAR" \
   "https://github.com/plantuml/plantuml/releases/download/v${PLANTUML_VERSION}/plantuml-${PLANTUML_VERSION}.jar"
-echo "Downloaded plantuml.jar to $jar_path"
+echo "Downloaded plantuml.jar to $PLANTUML_JAR"
 '''
 
 [tasks."plantuml:run"]
@@ -38,8 +37,7 @@ if [[ $# -eq 0 ]]; then
   exit 1
 fi
 
-jar_path="${PLANTUML_JAR/#\~/$HOME}"
-java -jar "$jar_path" "${@}"
+java -jar "$PLANTUML_JAR" "${@}"
 '''
 
 [tasks."plantuml:generate"]
@@ -51,7 +49,6 @@ run = '''
 #!/usr/bin/env bash
 set -euo pipefail
 
-jar_path="${PLANTUML_JAR/#\~/$HOME}"
 format="${1:-"svg"}"
 
 formats=()
@@ -61,7 +58,7 @@ out_dir="./out"
 mkdir -p "${out_dir}"
 
 for _f in "${formats[@]}"; do
-  java -jar "$jar_path" -charset UTF-8 -t"${_f}" -o "${out_dir}" ./*.puml
+  java -jar "$PLANTUML_JAR" -charset UTF-8 -t"${_f}" -o "${out_dir}" ./*.puml
 done
 echo "Diagrams generated in ${out_dir}/ directory"
 '''
