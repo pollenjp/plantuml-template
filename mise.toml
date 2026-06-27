@@ -2,7 +2,7 @@
 java = "25"
 
 [env]
-PLANTUML_VERSION = "1.2026.2"
+PLANTUML_VERSION = "1.2026.6"
 PLANTUML_JAR = "{{ env.HOME }}/.cache/plantuml/plantuml-{{ env.PLANTUML_VERSION }}.jar"
 
 [tasks."plantuml:download"]
